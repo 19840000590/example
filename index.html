@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我们的留言板网站 - 登录</title>
+    <title>我的留言板网站 - 登录</title>
     <style>
         * {
             margin: 0;
@@ -11,45 +11,25 @@
             box-sizing: border-box;
             font-family: "Microsoft YaHei", sans-serif;
         }
-        body 
-        {
-            /* 和留言板一致的粉紫渐变背景 */
-            background: linear-gradient(120deg, #f6cee6, #a99cf2);
+        body {
+            background: linear-gradient(120deg, #2c3e50, #4a6990);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
-        }
-        /* 网站名称 - 粉紫渐变文字，和留言板呼应 */
-        .site-name {
-            position: absolute;
-            top: 30px;
-            left: 30px;
-            font-size: 28px;
-            font-weight: bold;
-            background: linear-gradient(90deg, #8a51e6, #d750e9);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.15);
-            cursor: default;
         }
         .login-box {
-            /* 登录框白色背景+粉紫阴影 */
-            background: #d2bce1;
+            background: #fff;
             padding: 40px 30px;
             border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(192, 38, 211, 0.15);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
             width: 100%;
             max-width: 400px;
-            border: 1px solid #fbcee8;
         }
         .login-title {
             text-align: center;
             font-size: 26px;
-            /* 紫色标题文字 */
-            color: #5b21b6;
+            color: #2c3e50;
             margin-bottom: 35px;
             font-weight: 700;
         }
@@ -61,25 +41,21 @@
             width: 100%;
             height: 48px;
             padding: 0 15px;
-            /* 浅粉色输入框边框 */
-            border: 1px solid #fce7f3;
+            border: 1px solid #e0e0e0;
             border-radius: 8px;
             font-size: 16px;
             outline: none;
             transition: all 0.3s;
-            background: #f5e3ed;
         }
         .input-group input:focus {
-            /* 聚焦时紫色边框+高光 */
-            border-color: #a855f7;
-            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1);
-            background: #fff;
+            border-color: #4a6990;
+            box-shadow: 0 0 0 3px rgba(74,105,144,0.1);
         }
         .input-group label {
             position: absolute;
             top: 50%;
             left: 15px;
-            color: #9d174d;
+            color: #999;
             transform: translateY(-50%);
             pointer-events: none;
             transition: all 0.3s;
@@ -87,17 +63,16 @@
         .input-group input:focus ~ label,
         .input-group input:not(:placeholder-shown) ~ label {
             top: 0;
-            background: #f7e2e2;
+            background: #fff;
             padding: 0 5px;
             font-size: 12px;
-            color: #8b5cf6;
+            color: #4a6990;
         }
         .login-btn {
             width: 100%;
             height: 50px;
-            /* 粉紫渐变按钮，和留言板提交按钮一致 */
-            background: linear-gradient(90deg, #d946ef, #8b5cf6);
-            color: #f8e4e4;
+            background: #4a6990;
+            color: #fff;
             border: none;
             border-radius: 8px;
             font-size: 17px;
@@ -105,15 +80,12 @@
             cursor: pointer;
             transition: background 0.3s;
             margin-top: 10px;
-            box-shadow: 0 4px 10px rgba(168, 85, 247, 0.2);
         }
         .login-btn:hover {
-            background: linear-gradient(90deg, #c026d3, #7c3aed);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(168, 85, 247, 0.3);
+            background: #395577;
         }
         .tip-text {
-            color: #e11d48;
+            color: #f53f3f;
             font-size: 12px;
             margin-top: -20px;
             margin-bottom: 10px;
@@ -123,83 +95,27 @@
         .site-info {
             text-align: center;
             font-size: 12px;
-            color: #9333ea;
+            color: #666;
             margin-top: 25px;
-        }
-        /* 帮助按钮样式 */
-        .help-btn {
-            display: inline-block;
-            font-size: 13px;
-            color: #8b5cf6;
-            text-decoration: none;
-            margin: 8px 0;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .help-btn:hover {
-            color: #6d28d9;
-            text-decoration: underline;
-        }
-        /* 提示卡片样式 */
-        .help-card {
-            position: absolute;
-            background: #edd4d4;
-            padding: 15px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 16px rgba(192, 38, 211, 0.12);
-            font-size: 13px;
-            color: #333333;
-            display: none;
-            z-index: 100;
-            min-width: 220px;
-            border-left: 3px solid #d946ef;
-            margin-top: 5px;
-        }
-        .help-card.show {
-            display: block;
-            animation: fadeIn 0.2s ease-in-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        /* 手机端适配 */
-        @media (max-width: 500px) {
-            .site-name {
-                font-size: 22px;
-                top: 20px;
-                left: 20px;
-            }
-            .login-box {
-                padding: 30px 20px;
-            }
         }
     </style>
 </head>
 <body>
-    <!-- 网站名称 -->
-    <div class="site-name">我们的留言板</div>
-    
     <div class="login-box">
         <h2 class="login-title">用户登录</h2>
         <form id="loginForm">
             <div class="input-group">
                 <input type="text" id="username" placeholder=" " required>
-                <label for="username">用户名输入kalbinur</label>
+                <label for="username">专属账号</label>
                 <div class="tip-text" id="userTip"></div>
             </div>
             <div class="input-group">
                 <input type="password" id="password" placeholder=" " required>
-                <label for="password">输入密码</label>
+                <label for="password">统一密码</label>
                 <div class="tip-text" id="pwdTip"></div>
             </div>
-            <!-- 帮助按钮和提示卡片 -->
-            <div style="position: relative;">
-                <div class="help-btn" id="helpBtn">如何获取账号密码</div>
-                <div class="help-card" id="helpCard">如果你是那个人你肯定知道密码。</div>
-            </div>
             <button type="submit" class="login-btn">立即登录</button>
-            <p class="site-info">我们的专属留言板 © 2026</p>
+            <p class="site-info">我的专属留言板网站 © 2026</p>
         </form>
     </div>
 
@@ -209,11 +125,9 @@
         const password = document.getElementById('password');
         const userTip = document.getElementById('userTip');
         const pwdTip = document.getElementById('pwdTip');
-        const helpBtn = document.getElementById('helpBtn');
-        const helpCard = document.getElementById('helpCard');
 
         // 专属可登录账号&统一密码
-        const allowAccounts = ["kalbinur", "habibulla"];
+        const allowAccounts = ["kalbinur", "habibulla", "19840000590", "19351004083"];
         const correctPwd = "20220103";
 
         loginForm.onsubmit = function(e) {
@@ -244,10 +158,9 @@
                 pwdTip.innerText = '';
             }
 
-            // 只修复这1行错误：usernameInput 改成 userVal
+            // 登录成功：存账号+跳留言板
             if (isOk) {
                 localStorage.setItem('loginUser', userVal);
-                sessionStorage.setItem('loginUser',userVal);
                 window.location.href = 'message_board.html';
             }
         };
@@ -255,21 +168,6 @@
         // 聚焦清空提示
         username.onfocus = () => userTip.innerText = '';
         password.onfocus = () => pwdTip.innerText = '';
-
-        // 帮助按钮点击事件
-        helpBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            helpCard.classList.toggle('show');
-        });
-
-        // 点击其他区域关闭卡片
-        document.addEventListener('click', function() {
-            helpCard.classList.remove('show');
-        });
-
-        helpCard.addEventListener('click', function(e) {
-            e.stopPropagation();
-        });
     </script>
 </body>
 </html>

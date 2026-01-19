@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我们的留言板网站 - 留言区</title>
+    <title>我的留言板网站 - 留言区</title>
     <style>
         * {
             margin: 0;
@@ -12,14 +12,11 @@
             font-family: "Microsoft YaHei", sans-serif;
         }
         body {
-            /* 加深粉紫渐变背景 */
-            background: linear-gradient(120deg, #f8e0f0, #e8d5ff);
+            background: #f5f7fa;
             padding: 20px;
             max-width: 900px;
             margin: 0 auto;
             min-height: 100vh;
-            overflow-x: hidden; /* 防止表情包溢出横向滚动 */
-            position: relative; /* 作为表情包的父容器 */
         }
         /* 头部导航 */
         .header {
@@ -27,32 +24,27 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px 0;
-            border-bottom: 1px solid #d8a8c8; /* 加深边框色 */
+            border-bottom: 1px solid #e0e0e0;
             margin-bottom: 30px;
         }
         .site-name {
             font-size: 22px;
-            /* 加深渐变文字颜色 */
-            background: linear-gradient(90deg, #5b21b6, #be185d);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            color: #2c3e50;
             font-weight: 700;
         }
         .login-status {
-            color: #9d174d; /* 加深登录状态文字色 */
+            color: #4a6990;
             font-size: 14px;
-            font-weight: 500;
         }
         /* 留言板标题 */
         .board-title {
             text-align: center;
             margin-bottom: 40px;
-            color: #4c1d95; /* 加深标题色 */
+            color: #2c3e50;
         }
         .welcome-txt {
             font-size: 18px;
-            color: #831843; /* 加深欢迎语颜色 */
+            color: #666;
             font-weight: 500;
             margin-top: 10px;
         }
@@ -61,51 +53,42 @@
             background: #fff;
             padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 2px 12px rgba(168, 85, 247, 0.2); /* 加深阴影 */
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
             margin-bottom: 40px;
-            border: 1px solid #f0b9d8; /* 加深边框色 */
         }
         #msg-input {
             width: 100%;
             height: 120px;
             padding: 18px;
-            border: 1px solid #f0b9d8; /* 加深输入框边框 */
+            border: 1px solid #e0e0e0;
             border-radius: 8px;
             font-size: 16px;
             outline: none;
             resize: none;
             transition: all 0.3s;
-            line-height: 1.8;
-            margin-bottom: 20px;
-            background: #fcf1f8; /* 加深输入框背景 */
+            line-height: 1.6;
         }
         #msg-input:focus {
-            border-color: #9333ea; /* 加深聚焦边框色 */
-            box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.15); /* 加深高光 */
-            background: #fff;
+            border-color: #4a6990;
+            box-shadow: 0 0 0 3px rgba(74,105,144,0.1);
         }
-        /* 提交按钮 */
         #submit-btn {
+            margin-top: 15px;
             padding: 12px 35px;
-            /* 加深按钮渐变颜色 */
-            background: linear-gradient(90deg, #c026d3, #7c3aed);
+            background: #4a6990;
             color: #fff;
             border: none;
             border-radius: 8px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 10px rgba(147, 51, 234, 0.3); /* 加深按钮阴影 */
+            transition: background 0.3s;
         }
         #submit-btn:hover {
-            /* hover时更深的渐变 */
-            background: linear-gradient(90deg, #a21caf, #6d28d9);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(147, 51, 234, 0.4);
+            background: #395577;
         }
         .msg-tip {
-            color: #be123c; /* 加深提示文字色 */
+            color: #f53f3f;
             font-size: 12px;
             margin-top: 10px;
             height: 14px;
@@ -119,34 +102,12 @@
             background: #fff;
             padding: 25px;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(192, 38, 211, 0.15); /* 加深阴影 */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             margin-bottom: 20px;
-            transition: all 0.2s;
-            position: relative;
-            border-left: 4px solid #db2777; /* 加深左侧装饰条 */
+            transition: transform 0.2s;
         }
         .msg-item:hover {
             transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(192, 38, 211, 0.25); /* 加深hover阴影 */
-        }
-        /* 超小删除按钮样式 - 加深粉色系 */
-        .delete-msg {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            padding: 1px 6px;
-            background: #fecdd3; /* 加深删除按钮背景 */
-            color: #be123c; /* 加深删除按钮文字 */
-            border: 1px solid #f87171; /* 加深删除按钮边框 */
-            border-radius: 3px;
-            font-size: 10px;
-            cursor: pointer;
-            transition: all 0.2s;
-            line-height: 1.4;
-        }
-        .delete-msg:hover {
-            background: #be123c; /* 加深hover背景 */
-            color: #fff;
         }
         .msg-info {
             display: flex;
@@ -154,19 +115,19 @@
             align-items: center;
             margin-bottom: 15px;
             padding-bottom: 10px;
-            border-bottom: 1px solid #fde2e4; /* 加深分隔线 */
+            border-bottom: 1px solid #f0f0f0;
         }
         .msg-user {
             font-weight: 600;
-            color: #7c3aed; /* 加深用户名颜色 */
+            color: #4a6990;
             font-size: 16px;
         }
         .msg-time {
             font-size: 12px;
-            color: #71717a; /* 加深时间文字色 */
+            color: #999;
         }
         .msg-content {
-            color: #27272a; /* 加深留言内容色 */
+            color: #333;
             line-height: 1.8;
             font-size: 15px;
             white-space: pre-wrap;
@@ -175,68 +136,28 @@
         /* 无留言提示 */
         .empty-tip {
             text-align: center;
-            color: #7e22ce; /* 加深无留言提示色 */
+            color: #999;
             font-size: 16px;
             padding: 80px 0;
             background: #fff;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(192, 38, 211, 0.15);
-            border: 1px solid #f0b9d8;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
         /* 底部信息 */
         .footer {
             text-align: center;
             font-size: 12px;
-            color: #7e22ce; /* 加深底部文字色 */
+            color: #999;
             margin-top: 60px;
             padding: 20px 0;
-            border-top: 1px solid #d8a8c8; /* 加深底部边框 */
-        }
-        /* ========== 表情包动画样式（持续5秒） ========== */
-        .emoji {
-            position: fixed; /* 固定定位，确保铺满整个屏幕可视区 */
-            font-size: 28px; /* 放大表情更醒目 */
-            z-index: 9999; /* 最高层级，确保在最上层 */
-            pointer-events: none; /* 不影响其他操作 */
-            animation: float 5s ease-out forwards; /* 动画时长改为5秒 */
-            opacity: 0;
-        }
-        /* 表情包上浮消失动画（持续5秒） */
-        @keyframes float {
-            0% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-            60% {
-                opacity: 1; /* 前3秒稳定显示，不透明 */
-                transform: translateY(-30px) scale(1);
-            }
-            100% {
-                opacity: 0; /* 后2秒慢慢变透明 */
-                transform: translateY(-80px) scale(0.9);
-            }
-        }
-        /* 手机端适配 */
-        @media (max-width: 500px) {
-            .delete-msg {
-                top: 8px;
-                right: 8px;
-                padding: 1px 4px;
-                font-size: 9px;
-            }
-            .input-area {
-                padding: 20px;
-            }
-            .emoji {
-                font-size: 22px; /* 手机端缩小表情包 */
-            }
+            border-top: 1px solid #e0e0e0;
         }
     </style>
 </head>
 <body>
     <!-- 头部导航 -->
     <div class="header">
-        <div class="site-name">我们的留言板</div>
+        <div class="site-name">我的留言板</div>
         <div class="login-status" id="login-status"></div>
     </div>
 
@@ -257,28 +178,25 @@
     <div class="msg-list" id="msg-list"></div>
 
     <!-- 底部信息 -->
-    <div class="footer">我们的留言板网站 © 2026 版权所有</div>
+    <div class="footer">我的专属留言板网站 © 2026 版权所有</div>
 
     <script>
-        // 获取元素
         const welcomeTxt = document.getElementById('welcome-txt');
         const loginStatus = document.getElementById('login-status');
         const msgInput = document.getElementById('msg-input');
         const submitBtn = document.getElementById('submit-btn');
         const msgTip = document.getElementById('msg-tip');
         const msgList = document.getElementById('msg-list');
-        const body = document.body;
 
-        // 登录校验：未登录跳回登录页
+        // 校验登录状态：未登录直接跳回首页
         const loginUser = localStorage.getItem('loginUser');
         if (!loginUser) {
             alert('请先完成登录，才能进入留言板！');
             window.location.href = 'index.html';
         }
-        // ===================== 只修改这两行 ↓↓↓ 其他全部不变 =====================
-        welcomeTxt.innerText = `欢迎您kalbinur！希望您留下自己的脚印～`;
-        loginStatus.innerText = `当前登录：kalbinur`;
-        // ===================== 只修改这两行 ↑↑↑ 其他全部不变 =====================
+        // 显示登录信息
+        welcomeTxt.innerText = `欢迎你，${loginUser}！快来留下你的留言吧～`;
+        loginStatus.innerText = `当前登录：${loginUser}`;
 
         // 格式化时间：YYYY-MM-DD HH:MM:SS
         function formatTime() {
@@ -286,122 +204,63 @@
             return `${d.getFullYear()}-${(d.getMonth()+1).toString().padStart(2,0)}-${d.getDate().toString().padStart(2,0)} ${d.getHours().toString().padStart(2,0)}:${d.getMinutes().toString().padStart(2,0)}:${d.getSeconds().toString().padStart(2,0)}`;
         }
 
-        // 删除留言核心逻辑
-        function deleteMessage(index) {
-            if (confirm('确定删除这条留言吗？删除后无法恢复！')) {
-                const messages = JSON.parse(localStorage.getItem('boardMsg')) || [];
-                messages.splice(index, 1);
-                localStorage.setItem('boardMsg', JSON.stringify(messages));
-                renderMsg();
-            }
-        }
-
-        // 渲染留言列表
+        // 渲染留言列表（最新留言在最上方）
         function renderMsg() {
             const messages = JSON.parse(localStorage.getItem('boardMsg')) || [];
             if (messages.length === 0) {
-                msgList.innerHTML = '<div class="empty-tip">暂无留言，快来发布第一条留言吧～</div>';
+                msgList.innerHTML = '<div class="empty-tip">暂无留言，快来成为第一个留言的人吧～</div>';
                 return;
             }
-            msgList.innerHTML = messages.reverse().map((item, idx) => {
-                const originalIndex = messages.length - 1 - idx;
-                const deleteBtn = item.user === loginUser 
-                    ? `<button class="delete-msg" onclick="deleteMessage(${originalIndex})">删除</button>` 
-                    : '';
-                return `
-                    <div class="msg-item">
-                        ${deleteBtn}
-                        <div class="msg-info">
-                            <span class="msg-user">${item.user}</span>
-                            <span class="msg-time">${item.time}</span>
-                        </div>
-                        <div class="msg-content">${item.content}</div>
+            msgList.innerHTML = messages.reverse().map(item => `
+                <div class="msg-item">
+                    <div class="msg-info">
+                        <span class="msg-user">${item.user}</span>
+                        <span class="msg-time">${item.time}</span>
                     </div>
-                `;
-            }).join('');
-        }
-
-        // ========== 优化：满屏5秒表情包函数 ==========
-        function createEmojiEffect() {
-            const emojis = ['❤️','😘','💕','🥰','🥳','😍','😘','👫','🦋'];
-            const count = 80; // 增加数量到80个，确保满屏
-            // 先清除可能残留的表情
-            document.querySelectorAll('.emoji').forEach(el => el.remove());
-
-            for (let i = 0; i < count; i++) {
-                // 随机选一个表情包
-                const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
-                const emojiEl = document.createElement('span');
-                emojiEl.className = 'emoji';
-                emojiEl.innerText = randomEmoji;
-
-                // 随机位置：基于整个屏幕宽高，确保铺满
-                const randomX = Math.random() * window.innerWidth;
-                const randomY = Math.random() * window.innerHeight;
-                emojiEl.style.left = `${randomX}px`;
-                emojiEl.style.top = `${randomY}px`;
-
-                // 随机动画延迟，分批出现更有层次感
-                emojiEl.style.animationDelay = `${Math.random() * 1.5}s`;
-
-                body.appendChild(emojiEl);
-
-                // 动画结束后删除元素（延迟5秒）
-                setTimeout(() => {
-                    try {
-                        emojiEl.remove();
-                    } catch (e) {}
-                }, 5000);
-            }
+                    <div class="msg-content">${item.content}</div>
+                </div>
+            `).join('');
         }
 
         // 提交留言逻辑
         submitBtn.onclick = function() {
             const content = msgInput.value.trim();
-            if (!content) {
+            if (content === '') {
                 msgTip.innerText = '请输入留言内容后再提交哦！';
                 return;
             }
             msgTip.innerText = '';
 
+            // 构造留言对象
             const newMsg = {
                 user: loginUser,
                 time: formatTime(),
                 content: content
             };
 
+            // 本地存储留言（刷新/重启浏览器不丢失）
             const oldMsg = JSON.parse(localStorage.getItem('boardMsg')) || [];
             oldMsg.push(newMsg);
             localStorage.setItem('boardMsg', JSON.stringify(oldMsg));
 
+            // 清空输入框+重新渲染列表
             msgInput.value = '';
             renderMsg();
+            // 提交后滚动到第一条留言
             msgList.scrollIntoView({ behavior: 'smooth' });
-            
-            // ========== 触发表情包动画 ==========
-            createEmojiEffect();
         };
 
         // 输入框聚焦清空提示
         msgInput.onfocus = () => msgTip.innerText = '';
-        // Enter键提交（Shift+Enter换行）
+        // 按Enter键提交留言（按住Shift+Enter换行）
         msgInput.onkeydown = function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 submitBtn.click();
             }
         };
-        
-        // 全端实时同步核心代码
-        const SYNC_KEY = "boardMsg";
-        window.addEventListener('storage', function(e) {
-            if (e.key === SYNC_KEY) {
-                renderMsg();
-            }
-        });
-        setInterval(() => { renderMsg(); }, 2000);
 
-        window.deleteMessage = deleteMessage;
+        // 页面加载时渲染留言
         window.onload = renderMsg;
     </script>
 </body>
