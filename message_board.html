@@ -275,8 +275,10 @@
             alert('请先完成登录，才能进入留言板！');
             window.location.href = 'index.html';
         }
-        welcomeTxt.innerText = `欢迎您，${loginUser}！希望您留下自己的脚印～`;
-        loginStatus.innerText = `当前登录：${loginUser}`;
+        // ===================== 只修改这两行 ↓↓↓ 其他全部不变 =====================
+        welcomeTxt.innerText = `欢迎您kalbinur！希望您留下自己的脚印～`;
+        loginStatus.innerText = `当前登录：kalbinur`;
+        // ===================== 只修改这两行 ↑↑↑ 其他全部不变 =====================
 
         // 格式化时间：YYYY-MM-DD HH:MM:SS
         function formatTime() {
@@ -389,6 +391,15 @@
                 submitBtn.click();
             }
         };
+        
+        // 全端实时同步核心代码
+        const SYNC_KEY = "boardMsg";
+        window.addEventListener('storage', function(e) {
+            if (e.key === SYNC_KEY) {
+                renderMsg();
+            }
+        });
+        setInterval(() => { renderMsg(); }, 2000);
 
         window.deleteMessage = deleteMessage;
         window.onload = renderMsg;

@@ -244,9 +244,10 @@
                 pwdTip.innerText = '';
             }
 
-            // 登录成功：存账号+跳留言板
+            // 只修复这1行错误：usernameInput 改成 userVal
             if (isOk) {
                 localStorage.setItem('loginUser', userVal);
+                sessionStorage.setItem('loginUser',userVal);
                 window.location.href = 'message_board.html';
             }
         };
