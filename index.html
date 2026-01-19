@@ -20,6 +20,7 @@
             position: relative;
             padding: 20px;
         }
+        /* 网站名称样式 */
         .site-logo {
             position: absolute;
             top: 25px;
@@ -93,9 +94,11 @@
             color: #8462e2;
             font-weight: 500;
         }
+        /* 按钮区域 */
         .btn-area {
             margin-top: 10px;
         }
+        /* 无外框提示按钮 */
         .hint-btn {
             background: none;
             color: #6230b9;
@@ -111,6 +114,7 @@
             color: #c53a92;
             text-decoration: underline;
         }
+        /* 红色小字号提示文字 */
         .hint-text {
             color: #f53f3f;
             font-size: 11px;
@@ -159,20 +163,25 @@
     </style>
 </head>
 <body>
+    <!-- 左上角网站名称，点击刷新 -->
     <div class="site-logo" onclick="window.location.reload()">我们的留言板</div>
+
     <div class="login-box">
         <h2 class="login-title">用户登录</h2>
         <form id="loginForm">
             <div class="input-group">
                 <input type="text" id="username" placeholder=" " required>
+                <!-- 核心修改：专属账号 → 账号输入kalbinur -->
                 <label for="username">账号输入kalbinur</label>
                 <div class="tip-text" id="userTip"></div>
             </div>
             <div class="input-group">
                 <input type="password" id="password" placeholder=" " required>
+                <!-- 核心修改：统一密码 → 输入密码 -->
                 <label for="password">输入密码</label>
                 <div class="tip-text" id="pwdTip"></div>
             </div>
+            <!-- 按钮区域 -->
             <div class="btn-area">
                 <button type="button" class="hint-btn" onclick="showHint()">如何获取账号密码</button>
                 <div class="hint-text" id="hintText">如果你就是那个人肯定会知道密码</div>
@@ -181,6 +190,7 @@
             <p class="site-info">我们的专属留言板网站 © 2026</p>
         </form>
     </div>
+
     <script>
         const loginForm = document.getElementById('loginForm');
         const username = document.getElementById('username');
@@ -188,16 +198,21 @@
         const userTip = document.getElementById('userTip');
         const pwdTip = document.getElementById('pwdTip');
         const hintText = document.getElementById('hintText');
+
         const allowAccounts = ["kalbinur", "habibulla", "19840000590", "19351004083"];
         const correctPwd = "20220103";
+
+        // 显示/隐藏提示文字
         function showHint() {
             hintText.classList.toggle('show');
         }
+
         loginForm.onsubmit = function(e) {
             e.preventDefault();
             let isOk = true;
             const userVal = username.value.trim();
             const pwdVal = password.value.trim();
+
             if (userVal === '') {
                 userTip.innerText = '请输入账号';
                 isOk = false;
@@ -207,6 +222,7 @@
             } else {
                 userTip.innerText = '';
             }
+
             if (pwdVal === '') {
                 pwdTip.innerText = '请输入密码';
                 isOk = false;
@@ -216,11 +232,13 @@
             } else {
                 pwdTip.innerText = '';
             }
+
             if (isOk) {
                 localStorage.setItem('loginUser', userVal);
                 window.location.href = 'message_board.html';
             }
         };
+
         username.onfocus = () => userTip.innerText = '';
         password.onfocus = () => pwdTip.innerText = '';
     </script>
