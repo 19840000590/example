@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的留言板网站 - 留言区</title>
+    <title>我们的留言板网站 - 留言区</title>
     <style>
         * {
             margin: 0;
@@ -12,102 +12,118 @@
             font-family: "Microsoft YaHei", sans-serif;
         }
         body {
-            background: #f5f7fa;
+            background: linear-gradient(180deg, #f8e2f1, #e9e0f8, #dcebfa);
             padding: 20px;
             max-width: 900px;
             margin: 0 auto;
             min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
         }
-        /* 头部导航 */
+        /* 头部导航 - 合并网站名称，点击跳转登录页 */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid #e0e0e0;
+            padding: 15px 0 15px 0;
+            border-bottom: 1px solid #d8c9ee;
             margin-bottom: 30px;
+            margin-top: 20px;
         }
         .site-name {
-            font-size: 22px;
-            color: #2c3e50;
+            font-size: 24px;
+            background: linear-gradient(90deg, #d655bc, #7049d0, #45a0d8);
+            -webkit-background-clip: text;
+            color: transparent;
             font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+        .site-name:hover {
+            opacity: 0.8;
         }
         .login-status {
-            color: #4a6990;
+            color: #7049d0;
             font-size: 14px;
+            font-weight: 500;
         }
-        /* 留言板标题 */
         .board-title {
             text-align: center;
             margin-bottom: 40px;
-            color: #2c3e50;
+            color: #603cb8;
         }
         .welcome-txt {
             font-size: 18px;
-            color: #666;
+            color: #8770c2;
             font-weight: 500;
             margin-top: 10px;
         }
-        /* 留言输入区 */
         .input-area {
             background: #fff;
             padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+            border-radius: 16px;
+            box-shadow: 0 2px 20px rgba(126, 90, 202, 0.2);
             margin-bottom: 40px;
+            border:1px solid rgba(216,201,238,0.9);
         }
         #msg-input {
             width: 100%;
             height: 120px;
             padding: 18px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
+            border: 1px solid #d8c9ee;
+            border-radius: 10px;
             font-size: 16px;
             outline: none;
             resize: none;
             transition: all 0.3s;
             line-height: 1.6;
+            background-color: rgba(255,255,255,0.95);
         }
         #msg-input:focus {
-            border-color: #4a6990;
-            box-shadow: 0 0 0 3px rgba(74,105,144,0.1);
+            border-color: #9c7ce6;
+            box-shadow: 0 0 0 3px rgba(156, 124, 230, 0.2);
         }
         #submit-btn {
             margin-top: 15px;
             padding: 12px 35px;
-            background: #4a6990;
+            background: linear-gradient(90deg, #9c7ce6, #6db9e9);
             color: #fff;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s ease;
         }
         #submit-btn:hover {
-            background: #395577;
+            background: linear-gradient(90deg, #8060d3, #59a8d6);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(128,96,211,0.3);
         }
         .msg-tip {
-            color: #f53f3f;
+            color: #e85a92;
             font-size: 12px;
             margin-top: 10px;
             height: 14px;
             line-height: 14px;
         }
-        /* 留言展示区 */
         .msg-list {
             width: 100%;
         }
         .msg-item {
             background: #fff;
             padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-radius: 16px;
+            box-shadow: 0 2px 15px rgba(126, 90, 202, 0.15);
             margin-bottom: 20px;
-            transition: transform 0.2s;
+            transition: all 0.3s;
+            border:1px solid rgba(216,201,238,0.8);
+            display: flex;
+            flex-direction: column;
         }
         .msg-item:hover {
             transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(126, 90, 202, 0.25);
         }
         .msg-info {
             display: flex;
@@ -115,49 +131,82 @@
             align-items: center;
             margin-bottom: 15px;
             padding-bottom: 10px;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid #e9dff7;
+        }
+        .msg-user-time {
+            display: flex;
+            flex-direction: column;
         }
         .msg-user {
             font-weight: 600;
-            color: #4a6990;
+            color: #7049d0;
             font-size: 16px;
         }
         .msg-time {
             font-size: 12px;
-            color: #999;
+            color: #9882c7;
+            margin-top: 2px;
+        }
+        .del-btn {
+            padding: 4px 10px;
+            background: #f3e0f8;
+            color: #d655bc;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .del-btn:hover {
+            background: #d655bc;
+            color: #fff;
         }
         .msg-content {
-            color: #333;
+            color: #444;
             line-height: 1.8;
             font-size: 15px;
             white-space: pre-wrap;
             word-wrap: break-word;
         }
-        /* 无留言提示 */
         .empty-tip {
             text-align: center;
-            color: #999;
+            color: #9882c7;
             font-size: 16px;
             padding: 80px 0;
             background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-radius: 16px;
+            box-shadow: 0 2px 15px rgba(126, 90, 202, 0.15);
+            border:1px solid rgba(216,201,238,0.8);
         }
-        /* 底部信息 */
         .footer {
             text-align: center;
             font-size: 12px;
-            color: #999;
+            color: #9882c7;
             margin-top: 60px;
             padding: 20px 0;
-            border-top: 1px solid #e0e0e0;
+            border-top: 1px solid #d8c9ee;
+        }
+        /* 满屏表情包特效样式 */
+        .emoji {
+            position: fixed;
+            font-size: 22px;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0;
+            animation: emoji-fly 6s ease-in-out forwards;
+        }
+        @keyframes emoji-fly {
+            0% { opacity: 0; transform: translateY(0); }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 0; transform: translateY(-100vh); }
         }
     </style>
 </head>
 <body>
-    <!-- 头部导航 -->
+    <!-- 头部导航 - 网站名称点击跳转登录页 -->
     <div class="header">
-        <div class="site-name">我的留言板</div>
+        <div class="site-name" onclick="window.location.href='index.html'">我们的留言板</div>
         <div class="login-status" id="login-status"></div>
     </div>
 
@@ -178,7 +227,7 @@
     <div class="msg-list" id="msg-list"></div>
 
     <!-- 底部信息 -->
-    <div class="footer">我的专属留言板网站 © 2026 版权所有</div>
+    <div class="footer">我们的专属留言板网站 © 2026 版权所有</div>
 
     <script>
         const welcomeTxt = document.getElementById('welcome-txt');
@@ -194,32 +243,65 @@
             alert('请先完成登录，才能进入留言板！');
             window.location.href = 'index.html';
         }
-        // 显示登录信息
         welcomeTxt.innerText = `欢迎你，${loginUser}！快来留下你的留言吧～`;
         loginStatus.innerText = `当前登录：${loginUser}`;
 
-        // 格式化时间：YYYY-MM-DD HH:MM:SS
+        // 格式化时间
         function formatTime() {
             const d = new Date();
             return `${d.getFullYear()}-${(d.getMonth()+1).toString().padStart(2,0)}-${d.getDate().toString().padStart(2,0)} ${d.getHours().toString().padStart(2,0)}:${d.getMinutes().toString().padStart(2,0)}:${d.getSeconds().toString().padStart(2,0)}`;
         }
 
-        // 渲染留言列表（最新留言在最上方）
+        // ========== 核心修改：删除留言增加【确认弹窗+无法恢复提示】 ==========
+        function delMsg(index) {
+            // 弹出确认框，用户点击确定返回true，点击取消返回false
+            const isConfirm = confirm("确认删除此留言？删除后内容将无法恢复！");
+            if(isConfirm){
+                const messages = JSON.parse(localStorage.getItem('boardMsg')) || [];
+                const newMsgList = messages.filter((item, i) => i !== index);
+                localStorage.setItem('boardMsg', JSON.stringify(newMsgList));
+                renderMsg();
+            }
+        }
+
+        // 渲染留言列表
         function renderMsg() {
             const messages = JSON.parse(localStorage.getItem('boardMsg')) || [];
             if (messages.length === 0) {
                 msgList.innerHTML = '<div class="empty-tip">暂无留言，快来成为第一个留言的人吧～</div>';
                 return;
             }
-            msgList.innerHTML = messages.reverse().map(item => `
-                <div class="msg-item">
-                    <div class="msg-info">
-                        <span class="msg-user">${item.user}</span>
-                        <span class="msg-time">${item.time}</span>
+            msgList.innerHTML = messages.reverse().map((item, i) => {
+                const realIndex = messages.length - 1 - i;
+                const delBtnHtml = item.user === loginUser ? `<button class="del-btn" onclick="delMsg(${realIndex})">删除</button>` : '';
+                return `
+                    <div class="msg-item">
+                        <div class="msg-info">
+                            <div class="msg-user-time">
+                                <span class="msg-user">${item.user}</span>
+                                <span class="msg-time">${item.time}</span>
+                            </div>
+                            ${delBtnHtml}
+                        </div>
+                        <div class="msg-content">${item.content}</div>
                     </div>
-                    <div class="msg-content">${item.content}</div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
+        }
+
+        // 满屏表情包特效
+        const emojiArr = ['😘','💕','😍','❤️','🦋','🥳','👫','🥰'];
+        function createEmoji() {
+            for(let i=0; i<200; i++){
+                const emoji = document.createElement('div');
+                emoji.className = 'emoji';
+                emoji.innerText = emojiArr[Math.floor(Math.random() * emojiArr.length)];
+                emoji.style.left = `${Math.random() * 100}vw`;
+                emoji.style.fontSize = `${16 + Math.random() * 14}px`;
+                emoji.style.animationDelay = `${Math.random() * 5}s`;
+                document.body.appendChild(emoji);
+                setTimeout(()=>{ emoji.remove() },6000);
+            }
         }
 
         // 提交留言逻辑
@@ -231,28 +313,24 @@
             }
             msgTip.innerText = '';
 
-            // 构造留言对象
             const newMsg = {
                 user: loginUser,
                 time: formatTime(),
                 content: content
             };
 
-            // 本地存储留言（刷新/重启浏览器不丢失）
             const oldMsg = JSON.parse(localStorage.getItem('boardMsg')) || [];
             oldMsg.push(newMsg);
             localStorage.setItem('boardMsg', JSON.stringify(oldMsg));
 
-            // 清空输入框+重新渲染列表
             msgInput.value = '';
             renderMsg();
-            // 提交后滚动到第一条留言
             msgList.scrollIntoView({ behavior: 'smooth' });
+            createEmoji();
         };
 
-        // 输入框聚焦清空提示
+        // 输入框聚焦清空提示 + Enter提交
         msgInput.onfocus = () => msgTip.innerText = '';
-        // 按Enter键提交留言（按住Shift+Enter换行）
         msgInput.onkeydown = function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
