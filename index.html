@@ -27,7 +27,10 @@
             font-size: 26px;
             font-weight: 800;
             background: linear-gradient(90deg, #c53a92, #6230b9, #2d88c8);
-            -webkit-background-clip: text;
+            background-clip: text;        /* CSS官方标准写法，优先级最高 */
+            -webkit-background-clip: text;/* 谷歌/苹果/安卓浏览器兼容 */
+            -moz-background-clip: text;   /* 火狐浏览器兼容 */
+            color: transparent;           /* 文字透明，必须加，否则渐变不显示 */
             color: transparent;
             cursor: pointer;
             transition: opacity 0.3s ease;
@@ -50,7 +53,10 @@
             text-align: center;
             font-size: 28px;
             background: linear-gradient(90deg, #e86ed0, #8462e2, #5eb8e7);
-            -webkit-background-clip: text;
+            background-clip: text;        /* CSS官方标准写法，优先级最高 */
+            -webkit-background-clip: text;/* 谷歌/苹果/安卓浏览器兼容 */
+            -moz-background-clip: text;   /* 火狐浏览器兼容 */
+            color: transparent;           /* 文字透明，必须加，否则渐变不显示 */
             color: transparent;
             margin-bottom: 35px;
             font-weight: 700;

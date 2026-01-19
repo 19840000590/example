@@ -32,7 +32,10 @@
         .site-name {
             font-size: 24px;
             background: linear-gradient(90deg, #d655bc, #7049d0, #45a0d8);
-            -webkit-background-clip: text;
+            background-clip: text;        /* CSS官方标准写法，优先级最高 */
+            -webkit-background-clip: text;/* 谷歌/苹果/安卓浏览器兼容 */
+            -moz-background-clip: text;   /* 火狐浏览器兼容 */
+            color: transparent;           /* 文字透明，必须加，否则渐变不显示 */
             color: transparent;
             font-weight: 700;
             cursor: pointer;
@@ -203,7 +206,7 @@
 </head>
 <body>
     <div class="header">
-        <div class="site-name" onclick="window.location.href='index.html')">我们的留言板</div>
+        <div class="site-name" onclick="window.location.href='index.html'">我们的留言板</div>
         <div class="login-status" id="login-status"></div>
     </div>
     <div class="board-title">
@@ -227,7 +230,7 @@
         const msgList = document.getElementById('msg-list');
         
         // ✅ 修复BUG1：这里写你的【电脑局域网IP】，手机才能访问，格式不变，只改IP！！！
-        const apiUrl = "http://192.168.1.105:3000/messages";
+        const apiUrl = "http://127.0.0.1:3000/messages";
 
         // 校验登录状态
         const loginUser = localStorage.getItem('loginUser');
