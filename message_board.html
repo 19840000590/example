@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>我们的留言板网站 - 留言区</title>
     <style>
         * {
@@ -20,7 +20,6 @@
             position: relative;
             overflow-x: hidden;
         }
-        /* 头部导航 - 合并网站名称，点击跳转登录页 */
         .header {
             display: flex;
             justify-content: space-between;
@@ -172,11 +171,11 @@
             text-align: center;
             color: #9882c7;
             font-size: 16px;
-            padding: 80px 0;
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 2px 15px rgba(126, 90, 202, 0.15);
-            border:1px solid rgba(216,201,238,0.8);
+	padding: 80px 0;
+	background: #fff;
+	border-radius: 16px;
+	box-shadow: 0 2px 15px rgba(126, 90, 202, 0.15);
+	border:1px solid rgba(216,201,238,0.8);
         }
         .footer {
             text-align: center;
@@ -186,7 +185,6 @@
             padding: 20px 0;
             border-top: 1px solid #d8c9ee;
         }
-        /* 满屏表情包特效样式 */
         .emoji {
             position: fixed;
             font-size: 22px;
@@ -204,29 +202,20 @@
     </style>
 </head>
 <body>
-    <!-- 头部导航 - 网站名称点击跳转登录页 -->
     <div class="header">
-        <div class="site-name" onclick="window.location.href='index.html'">我们的留言板</div>
+        <div class="site-name" onclick="window.location.href='index.html')">我们的留言板</div>
         <div class="login-status" id="login-status"></div>
     </div>
-
-    <!-- 留言板标题 -->
     <div class="board-title">
         <h1>留言区</h1>
         <p class="welcome-txt" id="welcome-txt"></p>
     </div>
-
-    <!-- 留言输入区 -->
     <div class="input-area">
         <textarea id="msg-input" placeholder="请输入你的留言内容，想说的话都可以留在这～"></textarea>
         <div class="msg-tip" id="msg-tip"></div>
         <button id="submit-btn">提交留言</button>
     </div>
-
-    <!-- 留言展示区 -->
     <div class="msg-list" id="msg-list"></div>
-
-    <!-- 底部信息 -->
     <div class="footer">我们的专属留言板网站 © 2026 版权所有</div>
 
     <script>
@@ -236,8 +225,11 @@
         const submitBtn = document.getElementById('submit-btn');
         const msgTip = document.getElementById('msg-tip');
         const msgList = document.getElementById('msg-list');
+        
+        // ✅ 修复BUG1：这里写你的【电脑局域网IP】，手机才能访问，格式不变，只改IP！！！
+        const apiUrl = "http://192.168.1.105:3000/messages";
 
-        // 校验登录状态：未登录直接跳回首页
+        // 校验登录状态
         const loginUser = localStorage.getItem('loginUser');
         if (!loginUser) {
             alert('请先完成登录，才能进入留言板！');
@@ -252,28 +244,28 @@
             return `${d.getFullYear()}-${(d.getMonth()+1).toString().padStart(2,0)}-${d.getDate().toString().padStart(2,0)} ${d.getHours().toString().padStart(2,0)}:${d.getMinutes().toString().padStart(2,0)}:${d.getSeconds().toString().padStart(2,0)}`;
         }
 
-        // ========== 核心修改：删除留言增加【确认弹窗+无法恢复提示】 ==========
-        function delMsg(index) {
-            // 弹出确认框，用户点击确定返回true，点击取消返回false
-            const isConfirm = confirm("确认删除此留言？删除后内容将无法恢复！");
-            if(isConfirm){
-                const messages = JSON.parse(localStorage.getItem('boardMsg')) || [];
-                const newMsgList = messages.filter((item, i) => i !== index);
-                localStorage.setItem('boardMsg', JSON.stringify(newMsgList));
-                renderMsg();
+        // ✅ 获取所有留言 - 修复请求失败问题
+        async function getMessages() {
+            try {
+                const res = await fetch(apiUrl, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const messages = await res.json();
+                renderMsg(messages);
+            } catch (err) {
+                msgList.innerHTML = '<div class="empty-tip">网络连接中，请稍候...</div>';
             }
         }
 
-        // 渲染留言列表
-        function renderMsg() {
-            const messages = JSON.parse(localStorage.getItem('boardMsg')) || [];
+        // ✅ 渲染所有留言 - 所有人可见彼此留言
+        function renderMsg(messages) {
             if (messages.length === 0) {
                 msgList.innerHTML = '<div class="empty-tip">暂无留言，快来成为第一个留言的人吧～</div>';
                 return;
             }
-            msgList.innerHTML = messages.reverse().map((item, i) => {
-                const realIndex = messages.length - 1 - i;
-                const delBtnHtml = item.user === loginUser ? `<button class="del-btn" onclick="delMsg(${realIndex})">删除</button>` : '';
+            msgList.innerHTML = messages.reverse().map(item => {
+                const delBtnHtml = item.user === loginUser ? `<button class="del-btn" onclick="delMsg(${item.id})">删除</button>` : '';
                 return `
                     <div class="msg-item">
                         <div class="msg-info">
@@ -289,7 +281,39 @@
             }).join('');
         }
 
-        // 满屏表情包特效
+        // ✅ 提交留言 - 修复无法写入数据的BUG
+        async function addMessage() {
+            const content = msgInput.value.trim();
+            if (content === '') {
+                msgTip.innerText = '请输入留言内容后再提交哦！';
+                return;
+            }
+            msgTip.innerText = '';
+            const newMsg = { user: loginUser, time: formatTime(), content: content };
+            try {
+                await fetch(apiUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(newMsg)
+                });
+                msgInput.value = '';
+                getMessages();
+                createEmoji();
+            } catch (err) {
+                msgTip.innerText = '发送失败，请检查网络！';
+            }
+        }
+
+        // ✅ 删除留言 - 二次确认+删除不可恢复
+        async function delMsg(id) {
+            const isConfirm = confirm("确认删除此留言？删除后内容将无法恢复，且不可找回！");
+            if(isConfirm){
+                await fetch(`${apiUrl}/${id}`, { method: "DELETE" });
+                getMessages();
+            }
+        }
+
+        // ✅ 满屏表情包特效 - 不变
         const emojiArr = ['😘','💕','😍','❤️','🦋','🥳','👫','🥰'];
         function createEmoji() {
             for(let i=0; i<200; i++){
@@ -304,42 +328,16 @@
             }
         }
 
-        // 提交留言逻辑
-        submitBtn.onclick = function() {
-            const content = msgInput.value.trim();
-            if (content === '') {
-                msgTip.innerText = '请输入留言内容后再提交哦！';
-                return;
-            }
-            msgTip.innerText = '';
-
-            const newMsg = {
-                user: loginUser,
-                time: formatTime(),
-                content: content
-            };
-
-            const oldMsg = JSON.parse(localStorage.getItem('boardMsg')) || [];
-            oldMsg.push(newMsg);
-            localStorage.setItem('boardMsg', JSON.stringify(oldMsg));
-
-            msgInput.value = '';
-            renderMsg();
-            msgList.scrollIntoView({ behavior: 'smooth' });
-            createEmoji();
-        };
-
-        // 输入框聚焦清空提示 + Enter提交
+        // ✅ 绑定事件
+        submitBtn.onclick = addMessage;
         msgInput.onfocus = () => msgTip.innerText = '';
         msgInput.onkeydown = function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                submitBtn.click();
-            }
+            if (e.key === 'Enter' && !e.shiftKey) {e.preventDefault(); addMessage();}
         };
 
-        // 页面加载时渲染留言
-        window.onload = renderMsg;
+        // ✅ 实时刷新留言（2秒一次，更快更及时）
+        window.onload = getMessages;
+        setInterval(getMessages, 2000);
     </script>
 </body>
 </html>
