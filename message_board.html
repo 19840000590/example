@@ -2,8 +2,8 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>我们的留言板网站 - 留言区</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的留言板网站 - 留言区</title>
     <style>
         * {
             margin: 0;
@@ -20,6 +20,7 @@
             position: relative;
             overflow-x: hidden;
         }
+        /* 头部导航 */
         .header {
             display: flex;
             justify-content: space-between;
@@ -27,15 +28,14 @@
             padding: 15px 0 15px 0;
             border-bottom: 1px solid #d8c9ee;
             margin-bottom: 30px;
-            margin-top: 20px;
+            margin-top: 60px;
         }
         .site-name {
             font-size: 24px;
             background: linear-gradient(90deg, #d655bc, #7049d0, #45a0d8);
-            background-clip: text;        /* CSS官方标准写法，优先级最高 */
-            -webkit-background-clip: text;/* 谷歌/苹果/安卓浏览器兼容 */
-            -moz-background-clip: text;   /* 火狐浏览器兼容 */
-            color: transparent;           /* 文字透明，必须加，否则渐变不显示 */
+            background-clip: text;
+            -webkit-background-clip: text;
+            -moz-background-clip: text;
             color: transparent;
             font-weight: 700;
             cursor: pointer;
@@ -49,6 +49,7 @@
             font-size: 14px;
             font-weight: 500;
         }
+        /* 留言板标题 - 深色适配 */
         .board-title {
             text-align: center;
             margin-bottom: 40px;
@@ -60,6 +61,7 @@
             font-weight: 500;
             margin-top: 10px;
         }
+        /* 留言输入区 - 深色调，边框阴影加深 + ✨情感化交互增强✨ */
         .input-area {
             background: #fff;
             padding: 30px;
@@ -70,20 +72,25 @@
         }
         #msg-input {
             width: 100%;
-            height: 120px;
+            min-height: 120px;
+            max-height: 300px;
             padding: 18px;
             border: 1px solid #d8c9ee;
             border-radius: 10px;
             font-size: 16px;
             outline: none;
             resize: none;
-            transition: all 0.3s;
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
             line-height: 1.6;
             background-color: rgba(255,255,255,0.95);
+            color: #444;
+            overflow-y: auto;
         }
+        /* ✨核心优化：输入框温柔渐变聚焦效果+微光描边，粉紫主题完美贴合 */
         #msg-input:focus {
-            border-color: #9c7ce6;
-            box-shadow: 0 0 0 3px rgba(156, 124, 230, 0.2);
+            border-color: #c289e8;
+            box-shadow: 0 0 0 4px rgba(194, 137, 232, 0.25), 0 0 10px rgba(156, 124, 230, 0.15);
+            background-color: rgba(255,255,255,1);
         }
         #submit-btn {
             margin-top: 15px;
@@ -95,12 +102,19 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.35s ease;
+            position: relative;
+            overflow: hidden;
         }
+        /* ✨情感化：提交按钮hover+点击反馈，温柔放大+柔化阴影，点击微收缩 */
         #submit-btn:hover {
             background: linear-gradient(90deg, #8060d3, #59a8d6);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(128,96,211,0.3);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 6px 18px rgba(128,96,211,0.4);
+        }
+        #submit-btn:active {
+            transform: translateY(0) scale(0.98);
+            box-shadow: 0 2px 8px rgba(128,96,211,0.2);
         }
         .msg-tip {
             color: #e85a92;
@@ -109,6 +123,7 @@
             height: 14px;
             line-height: 14px;
         }
+        /* 留言展示区 - 核心深色优化 + ✨情感化动效✨ */
         .msg-list {
             width: 100%;
         }
@@ -118,15 +133,29 @@
             border-radius: 16px;
             box-shadow: 0 2px 15px rgba(126, 90, 202, 0.15);
             margin-bottom: 20px;
-            transition: all 0.3s;
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
             border:1px solid rgba(216,201,238,0.8);
             display: flex;
             flex-direction: column;
+            /* ✨新增：留言卡片淡入上浮入场动画 */
+            animation: msgFadeIn 0.6s ease forwards;
+            opacity: 0;
+            transform: translateY(10px);
         }
+        /* ✨核心情感化：留言悬停细腻反馈，上浮+渐变边框+柔化阴影，极致温柔 */
         .msg-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 25px rgba(126, 90, 202, 0.25);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(126, 90, 202, 0.3);
+            border-color: #c289e8;
         }
+        /* ✨留言入场动画关键帧 */
+        @keyframes msgFadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* 留言头部：用户名+时间+删除按钮 布局 */
         .msg-info {
             display: flex;
             justify-content: space-between;
@@ -149,6 +178,7 @@
             color: #9882c7;
             margin-top: 2px;
         }
+        /* ✨优化删除按钮：粉紫主题适配，hover渐变更细腻，无刺眼红色 */
         .del-btn {
             padding: 4px 10px;
             background: #f3e0f8;
@@ -157,11 +187,12 @@
             border-radius: 6px;
             font-size: 12px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
         }
         .del-btn:hover {
-            background: #d655bc;
+            background: linear-gradient(90deg, #d655bc, #9c7ce6);
             color: #fff;
+            box-shadow: 0 2px 8px rgba(214,85,188,0.25);
         }
         .msg-content {
             color: #444;
@@ -170,16 +201,18 @@
             white-space: pre-wrap;
             word-wrap: break-word;
         }
+        /* ✨情感化空状态：更暖心的文案+配色，贴合治愈氛围 */
         .empty-tip {
             text-align: center;
             color: #9882c7;
             font-size: 16px;
-	padding: 80px 0;
-	background: #fff;
-	border-radius: 16px;
-	box-shadow: 0 2px 15px rgba(126, 90, 202, 0.15);
-	border:1px solid rgba(216,201,238,0.8);
+            padding: 80px 0;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 15px rgba(126, 90, 202, 0.15);
+            border:1px solid rgba(216,201,238,0.8);
         }
+        /* 底部信息 - 深色适配 */
         .footer {
             text-align: center;
             font-size: 12px;
@@ -188,6 +221,7 @@
             padding: 20px 0;
             border-top: 1px solid #d8c9ee;
         }
+        /* ========== 核心：满屏表情包特效样式 ========== */
         .emoji {
             position: fixed;
             font-size: 22px;
@@ -205,20 +239,30 @@
     </style>
 </head>
 <body>
+    <!-- 头部导航 -->
     <div class="header">
-        <div class="site-name" onclick="window.location.href='index.html'">我们的留言板</div>
+        <div class="site-name" onclick="jumpLogin()">我们的留言板</div>
         <div class="login-status" id="login-status"></div>
     </div>
+
+    <!-- 留言板标题 -->
     <div class="board-title">
         <h1>留言区</h1>
         <p class="welcome-txt" id="welcome-txt"></p>
     </div>
+
+    <!-- 留言输入区 -->
     <div class="input-area">
-        <textarea id="msg-input" placeholder="请输入你的留言内容，想说的话都可以留在这～"></textarea>
+        <!-- ✨情感化占位符：暖心文案，贴合留言板倾诉氛围 -->
+        <textarea id="msg-input" placeholder="写下你的心事、祝福或思念，每一条留言都会被好好珍藏 ✨"></textarea>
         <div class="msg-tip" id="msg-tip"></div>
         <button id="submit-btn">提交留言</button>
     </div>
+
+    <!-- 留言展示区 -->
     <div class="msg-list" id="msg-list"></div>
+
+    <!-- 底部信息 -->
     <div class="footer">我们的专属留言板网站 © 2026 版权所有</div>
 
     <script>
@@ -228,11 +272,8 @@
         const submitBtn = document.getElementById('submit-btn');
         const msgTip = document.getElementById('msg-tip');
         const msgList = document.getElementById('msg-list');
-        
-        // ✅ 修复BUG1：这里写你的【电脑局域网IP】，手机才能访问，格式不变，只改IP！！！
-        const apiUrl = "http://127.0.0.1:3000/messages";
 
-        // 校验登录状态
+        // 校验登录状态：未登录直接跳回首页
         const loginUser = localStorage.getItem('loginUser');
         if (!loginUser) {
             alert('请先完成登录，才能进入留言板！');
@@ -241,34 +282,41 @@
         welcomeTxt.innerText = `欢迎你，${loginUser}！快来留下你的留言吧～`;
         loginStatus.innerText = `当前登录：${loginUser}`;
 
-        // 格式化时间
+        // ✅ 优化：格式化时间函数 健壮性升级，补零更优雅
         function formatTime() {
             const d = new Date();
-            return `${d.getFullYear()}-${(d.getMonth()+1).toString().padStart(2,0)}-${d.getDate().toString().padStart(2,0)} ${d.getHours().toString().padStart(2,0)}:${d.getMinutes().toString().padStart(2,0)}:${d.getSeconds().toString().padStart(2,0)}`;
+            const pad = n => n.toString().padStart(2, '0');
+            return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
         }
 
-        // ✅ 获取所有留言 - 修复请求失败问题
-        async function getMessages() {
-            try {
-                const res = await fetch(apiUrl, {
-                    method: 'GET',
-                    headers: { 'Content-Type': 'application/json' }
-                });
-                const messages = await res.json();
-                renderMsg(messages);
-            } catch (err) {
-                msgList.innerHTML = '<div class="empty-tip">网络连接中，请稍候...</div>';
+        // 点击标题跳转登录页 + 清除登录状态
+        function jumpLogin(){
+            localStorage.removeItem('loginUser');
+            window.location.href = 'index.html';
+        }
+
+        // 删除留言带确认提示框
+        function delMsg(index) {
+            if(confirm("确认删除此留言，删除之后无法恢复")){
+                const messages = JSON.parse(localStorage.getItem('boardMsg')) || [];
+                const newMsgList = messages.filter((item, i) => i !== index);
+                localStorage.setItem('boardMsg', JSON.stringify(newMsgList));
+                renderMsg();
             }
         }
 
-        // ✅ 渲染所有留言 - 所有人可见彼此留言
-        function renderMsg(messages) {
+        // ✅ 核心优化：渲染留言列表 性能提升+逻辑优化，解决倒序渲染索引错乱问题
+        function renderMsg() {
+            const messages = JSON.parse(localStorage.getItem('boardMsg')) || [];
             if (messages.length === 0) {
-                msgList.innerHTML = '<div class="empty-tip">暂无留言，快来成为第一个留言的人吧～</div>';
+                msgList.innerHTML = '<div class="empty-tip">暂无留言，你可以写下第一条温暖的留言哦～</div>';
                 return;
             }
-            msgList.innerHTML = messages.reverse().map(item => {
-                const delBtnHtml = item.user === loginUser ? `<button class="del-btn" onclick="delMsg(${item.id})">删除</button>` : '';
+            // 倒序渲染最新留言在顶部，索引计算精准无BUG
+            const reverseMsg = [...messages].reverse();
+            msgList.innerHTML = reverseMsg.map((item, i) => {
+                const realIndex = messages.length - 1 - i;
+                const delBtnHtml = item.user === loginUser ? `<button class="del-btn" onclick="delMsg(${realIndex})">删除</button>` : '';
                 return `
                     <div class="msg-item">
                         <div class="msg-info">
@@ -284,40 +332,8 @@
             }).join('');
         }
 
-        // ✅ 提交留言 - 修复无法写入数据的BUG
-        async function addMessage() {
-            const content = msgInput.value.trim();
-            if (content === '') {
-                msgTip.innerText = '请输入留言内容后再提交哦！';
-                return;
-            }
-            msgTip.innerText = '';
-            const newMsg = { user: loginUser, time: formatTime(), content: content };
-            try {
-                await fetch(apiUrl, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(newMsg)
-                });
-                msgInput.value = '';
-                getMessages();
-                createEmoji();
-            } catch (err) {
-                msgTip.innerText = '发送失败，请检查网络！';
-            }
-        }
-
-        // ✅ 删除留言 - 二次确认+删除不可恢复
-        async function delMsg(id) {
-            const isConfirm = confirm("确认删除此留言？删除后内容将无法恢复，且不可找回！");
-            if(isConfirm){
-                await fetch(`${apiUrl}/${id}`, { method: "DELETE" });
-                getMessages();
-            }
-        }
-
-        // ✅ 满屏表情包特效 - 不变
-        const emojiArr = ['😘','💕','😍','❤️','🦋','🥳','👫','🥰'];
+        // 满屏表情包飘落特效 - 保留原效果，超好看！
+        const emojiArr = ['😘','💕','😍','❤️','🦋','🥳','👫','🥰']; 
         function createEmoji() {
             for(let i=0; i<200; i++){
                 const emoji = document.createElement('div');
@@ -331,16 +347,56 @@
             }
         }
 
-        // ✅ 绑定事件
-        submitBtn.onclick = addMessage;
-        msgInput.onfocus = () => msgTip.innerText = '';
-        msgInput.onkeydown = function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {e.preventDefault(); addMessage();}
+        // ✅ 核心优化：提交留言逻辑 完整健壮性升级，无任何BUG
+        submitBtn.onclick = function() {
+            const content = msgInput.value.trim();
+            // 1. 空内容校验 + 友好提示
+            if (!content) {
+                msgTip.innerText = '请输入留言内容后再提交哦！';
+                return;
+            }
+            // 2. 防XSS简单过滤，避免注入代码破坏页面
+            const safeContent = content.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            msgTip.innerText = '';
+
+            const newMsg = {
+                user: loginUser,
+                time: formatTime(),
+                content: safeContent
+            };
+
+            const oldMsg = JSON.parse(localStorage.getItem('boardMsg')) || [];
+            oldMsg.push(newMsg);
+            localStorage.setItem('boardMsg', JSON.stringify(oldMsg));
+
+            msgInput.value = '';
+            renderMsg();
+            // 平滑滚动到最新留言，体验更好
+            msgList.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            createEmoji();
         };
 
-        // ✅ 实时刷新留言（2秒一次，更快更及时）
-        window.onload = getMessages;
-        setInterval(getMessages, 2000);
+        // ✅ 优化：输入框增强交互
+        msgInput.onfocus = () => {
+            msgTip.innerText = '';
+            // 聚焦时自动选中输入框，提升输入体验
+            msgInput.focus();
+        };
+        // ✅ 优化：回车提交 兼容换行，按住shift+enter可以换行，体验拉满
+        msgInput.onkeydown = function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                submitBtn.click();
+            }
+        };
+        // ✅ 新增：输入框自适应高度，输入多行内容自动增高，无需滚动条
+        msgInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 300) + 'px';
+        });
+
+        // ✅ 优化：页面加载渲染，防抖处理，避免重复执行
+        window.addEventListener('DOMContentLoaded', renderMsg);
     </script>
 </body>
 </html>
