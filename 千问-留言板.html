@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>我们的留言板</title>
+  <style>
+    :root {
+      --main-pink: #ff9ec6;
+      --main-purple: #b993d6;
+      --main-blue: #8ac6d1;
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --text-dark: #5a4a6e;
+      --delete-color: #b993d6;
+      --logout-border: #b993d6;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "HarmonyOS Sans SC", "PingFang SC", "Microsoft YaHei", "Noto Color Emoji", sans-serif;
+    }
+
+    body {
+      background: linear-gradient(125deg, var(--main-pink), var(--main-purple), var(--main-blue));
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    .container {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 28px;
+      padding: 32px;
+      width: 92%;
+      max-width: 460px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--main-purple);
+      margin-bottom: 22px;
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text-dark);
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px 16px;
+      border: 2px solid #e6d7f0;
+      border-radius: 16px;
+      font-size: 16px;
+      outline: none;
+      transition: all 0.3s;
+      background: rgba(255, 255, 255, 0.7);
+    }
+
+    input:focus {
+      border-color: var(--main-purple);
+      box-shadow: 0 0 0 3px rgba(185, 147, 214, 0.25);
+    }
+
+    button.login-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(to right, var(--main-purple), var(--main-pink));
+      color: white;
+      border: none;
+      border-radius: 16px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 4px 12px rgba(185, 147, 214, 0.4);
+    }
+
+    button.login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(185, 147, 214, 0.6);
+    }
+
+    #messageBoard {
+      display: none;
+    }
+
+    #logoutBtn {
+      display: block;
+      width: fit-content;
+      margin: 16px auto 0;
+      padding: 6px 18px;
+      background: transparent;
+      color: var(--main-purple);
+      border: 2px solid var(--logout-border);
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+
+    #logoutBtn:hover {
+      background: rgba(185, 147, 214, 0.1);
+      transform: scale(1.05);
+    }
+
+    .message-item {
+      background: rgba(255, 255, 255, 0.7);
+      padding: 16px;
+      border-radius: 18px;
+      margin: 16px 0;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+      position: relative;
+      border-left: 4px solid var(--main-blue);
+    }
+
+    .message-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 13px;
+      color: var(--main-purple);
+    }
+
+    .delete-btn {
+      background: var(--delete-color);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 26px;
+      height: 26px;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      line-height: 1;
+      transition: 0.2s;
+    }
+
+    .delete-btn:hover {
+      background: #a07bc9;
+      transform: scale(1.1);
+    }
+
+    textarea {
+      width: 100%;
+      height: 85px;
+      padding: 14px;
+      border: 2px solid #e6d7f0;
+      border-radius: 16px;
+      font-size: 16px;
+      resize: none;
+      margin-top: 14px;
+      outline: none;
+      background: rgba(255, 255, 255, 0.7);
+    }
+
+    textarea:focus {
+      border-color: var(--main-purple);
+      box-shadow: 0 0 0 3px rgba(185, 147, 214, 0.25);
+    }
+
+    .emoji-float {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0;
+      animation: floatUp 5s forwards;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) translateX(0) rotate(0deg) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: 
+          translateY(-100vh) 
+          translateX(calc(-100px + 200vw * var(--randX))) 
+          rotate(calc(720deg * var(--randR)))
+          scale(var(--scale));
+        opacity: 0;
+      }
+    }
+
+    #errorMsg {
+      color: #ff5c8a;
+      text-align: center;
+      margin-top: 12px;
+      font-size: 14px;
+      min-height: 18px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- 登录页面（已移除“欢迎回来！”） -->
+<div class="container" id="loginPage">
+  <h1>✨ 我们的留言板 ✨</h1>
+  <div class="form-group">
+    <label for="username">用户名</label>
+    <input type="text" id="username" placeholder="kalbinur 或 habibulla" autocomplete="off" />
+  </div>
+  <div class="form-group">
+    <label for="password">密码</label>
+    <input type="password" id="password" placeholder="输入专属密码" autocomplete="off" />
+  </div>
+  <button class="login-btn" onclick="login()">登录进入</button>
+  <p id="errorMsg"></p>
+</div>
+
+<!-- 留言页面 -->
+<div class="container" id="messageBoard">
+  <h1>💌 欢迎回来！</h1>
+  <p id="currentUser" style="text-align: center; color: var(--main-purple); margin-bottom: 14px; font-size: 15px;"></p>
+  
+  <textarea id="newMessage" placeholder="写下你的心里话吧～ 💕"></textarea>
+  <button class="login-btn" onclick="postMessage()">发布留言</button>
+  <button id="logoutBtn" onclick="logout()">退出登录</button>
+
+  <div id="messagesList" style="margin-top: 22px;"></div>
+</div>
+
+<script>
+  const users = {
+    'kalbinur': '20220103',
+    'habibulla': '20031007'
+  };
+
+  let currentUser = null;
+
+  function login() {
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+    const errorMsg = document.getElementById('errorMsg');
+
+    if (!users[username]) {
+      errorMsg.textContent = '❌ 用户名不存在';
+      return;
+    }
+    if (users[username] !== password) {
+      errorMsg.textContent = '❌ 密码错误';
+      return;
+    }
+
+    currentUser = username;
+    document.getElementById('currentUser').textContent = `当前用户：${username}`;
+    document.getElementById('loginPage').style.display = 'none';
+    document.getElementById('messageBoard').style.display = 'block';
+    loadMessages();
+  }
+
+  function logout() {
+    currentUser = null;
+    document.getElementById('messageBoard').style.display = 'none';
+    document.getElementById('loginPage').style.display = 'block';
+    document.getElementById('username').value = '';
+    document.getElementById('password').value = '';
+    document.getElementById('errorMsg').textContent = '';
+  }
+
+  function postMessage() {
+    const text = document.getElementById('newMessage').value.trim();
+    if (!text) {
+      alert('留言内容不能为空哦～');
+      return;
+    }
+
+    const messages = JSON.parse(localStorage.getItem('messages') || '[]');
+    const newMsg = {
+      id: Date.now(),
+      user: currentUser,
+      content: text,
+      time: new Date().toLocaleString('zh-CN')
+    };
+    messages.push(newMsg);
+    localStorage.setItem('messages', JSON.stringify(messages));
+    document.getElementById('newMessage').value = '';
+
+    showFloatingEmojis(300);
+    loadMessages();
+  }
+
+  function showFloatingEmojis(count) {
+    const emojis = [
+      '💖', '✨', '🦋', '❤️', '🌸', '💫', '🌈', '🦄', '🎀', '🍭', '🍬', '🌟', '🌷', '🌼', '🍒',
+      '🐶', '🐱', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐙', '🦑', '🐝',
+      '🪐', '🫧', '🎈', '🎁', '🧁', '🍓', '🍋', '🍇', '🍉', '🍑', '🥝', '🥥', '🥭', '🍍', '🍏',
+      '🌙', '☀️', '☁️', '⭐', '❄️', '💧', '🔥', '⚡', '☄️', '🎇'
+    ];
+
+    for (let i = 0; i < count; i++) {
+      setTimeout(() => {
+        const emoji = document.createElement('div');
+        emoji.className = 'emoji-float';
+        emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        
+        const leftPos = Math.random() * 100;
+        const scale = 0.5 + Math.random() * 1.2;
+        const randX = Math.random();
+        const randR = Math.random();
+
+        emoji.style.left = `${leftPos}vw`;
+        emoji.style.top = '100vh';
+        emoji.style.fontSize = `${12 + Math.random() * 20}px`;
+        emoji.style.setProperty('--randX', randX.toFixed(2));
+        emoji.style.setProperty('--randR', randR.toFixed(2));
+        emoji.style.setProperty('--scale', scale.toFixed(2));
+
+        document.body.appendChild(emoji);
+
+        setTimeout(() => {
+          if (emoji.parentNode) emoji.parentNode.removeChild(emoji);
+        }, 5000);
+      }, i * 5);
+    }
+  }
+
+  function deleteMessage(id) {
+    if (!confirm('⚠️ 确定要删除此留言吗？\n删除后无法恢复！')) return;
+
+    let messages = JSON.parse(localStorage.getItem('messages') || '[]');
+    messages = messages.filter(msg => msg.id !== id);
+    localStorage.setItem('messages', JSON.stringify(messages));
+    loadMessages();
+  }
+
+  function loadMessages() {
+    const messages = JSON.parse(localStorage.getItem('messages') || '[]');
+    const list = document.getElementById('messagesList');
+    list.innerHTML = '';
+
+    messages.reverse().forEach(msg => {
+      const div = document.createElement('div');
+      div.className = 'message-item';
+      const canDelete = (msg.user === currentUser);
+      div.innerHTML = `
+        <div class="message-header">
+          <span><strong>${msg.user}</strong> · ${msg.time}</span>
+          ${canDelete ? `<button class="delete-btn" title="删除" onclick="deleteMessage(${msg.id})">×</button>` : ''}
+        </div>
+        <div>${msg.content}</div>
+      `;
+      list.appendChild(div);
+    });
+  }
+</script>
+
+</body>
+</html>
